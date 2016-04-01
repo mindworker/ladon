@@ -50,14 +50,14 @@ Ladon is a authorization library. But you can also call it a policy administrati
 Easy, right? To create such a policy do:
 
 ```go
-import github.com/ory-am/ladon/policy
+import github.com/ory-am/ladon
 
-var pol := &policy.DefaultPolicy{
+var pol := &ladon.DefaultPolicy{
     ID: "68819e5a-738b-41ec-b03c-b58a1b19d043",
     Description: "something humanly readable",
     // ...
-    Conditions: []policy.Condition{
-        &policy.DefaultCondition{
+    Conditions: []ladon.Condition{
+        &ladon.DefaultCondition{
             Operator: "SubjectIsOwner",
         },
     },
@@ -67,10 +67,10 @@ var pol := &policy.DefaultPolicy{
 Let's see this in action! We're assuming that the passed policy has the same values as the policy layout.
 
 ```go
-import github.com/ory-am/ladon/guard
+import github.com/ory-am/ladon
 
-var guardian := new(guard.DefaultGuard)
-granted, err := guardian.IsGranted("urn:something:resource_a", "delete", "ken", []policy.Policy{pol}, nil)
+var guardian := new(ladon.DefaultGuard)
+granted, err := guardian.IsGranted("urn:something:resource_a", "delete", "ken", []ladon.Policy{pol}, nil)
 // if err != nil ...
 log.Print(granted) // output: false
 ```
@@ -80,14 +80,13 @@ and we did not pass a context, the policy was not accountable for this set of pr
 Let's try it again:
 
 ```go
-import github.com/ory-am/ladon/guard
-import github.com/ory-am/ladon/guard/operator
+import github.com/ory-am/ladon
 
-var guardian := new(guard.DefaultGuard)
-var ctx := operator.Context{
+var guardian := new(ladon.DefaultGuard)
+var ctx := ladon.Context{
     Owner: "ken"
 }
-granted, err := guardian.IsGranted("urn:something:resource_a", "delete", "ken", []policy.Policy{pol}, ctx)
+granted, err := guardian.IsGranted("urn:something:resource_a", "delete", "ken", []ladon.Policy{pol}, ctx)
 // if err != nil ...
 log.Print(granted) // output: true
 ```
